@@ -1,39 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&display=swap');
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-:root {
-  --bg: #0f1117;
-  --surface: #1a1d26;
-  --surface-high: #22263a;
-  --accent: #f5a623;
-  --blue: #4a9eff;
-  --green: #2ecc71;
-  --red: #e74c3c;
-  --text: #e8eaf0;
-  --text-muted: #7a7f9a;
-  --border: #2e3248;
-}
-
-html, body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'IBM Plex Mono', monospace;
-  min-height: 100vh;
-}
-
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --bg: #0f1117; --surface: #1a1d26; --accent: #f5a623; --text: #e8eaf0; }
+html, body { background: var(--bg); color: var(--text); font-family: 'IBM Plex Mono', monospace; min-height: 100vh; }
 button { font-family: inherit; }
 input, select, textarea { font-family: inherit; }
-
-/* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-/* PWA safe area */
-.safe-top { padding-top: env(safe-area-inset-top); }
-.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+::-webkit-scrollbar-thumb { background: #2e3248; border-radius: 3px; }

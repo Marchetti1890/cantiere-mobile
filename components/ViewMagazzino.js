@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import { supabase } from '../../lib/supabase'
-import { C, Badge, Card, Btn, Input, Modal, Row, Spinner, Empty } from '../../components/ui'
+import { supabase } from '../lib/supabase'
+import { C, Badge, Card, Btn, Input, Modal, Row, Spinner, Empty } from './ui'
 
-export default function ViewMagazzino() {
+export default function ViewMagazzino({ utente }) {
   const [tab, setTab] = useState('calendario')
   const [trasporti, setTrasporti] = useState([])
   const [cantieri, setCantieri] = useState([])
@@ -51,7 +51,6 @@ export default function ViewMagazzino() {
 
   const giorni = getGiorni()
   const dayNames = ['Dom','Lun','Mar','Mer','Gio','Ven','Sab']
-
   const trasportiGiorno = trasporti.filter(t => t.data === viewDate)
   const richiesti = trasporti.filter(t => t.stato === 'RICHIESTO')
   const completati = trasporti.filter(t => t.stato === 'COMPLETATO')
@@ -89,7 +88,6 @@ export default function ViewMagazzino() {
 
   return (
     <div>
-      {/* Tabs */}
       <div style={{ display: 'flex', gap: 6, marginBottom: 18, overflowX: 'auto' }}>
         {[['calendario', '📅 Calendario'], [`richieste`, `📋 Da assegnare (${richiesti.length})`], ['report', '📊 Report']].map(([k, l]) => (
           <button key={k} onClick={() => setTab(k)} style={{
@@ -101,7 +99,6 @@ export default function ViewMagazzino() {
         ))}
       </div>
 
-      {/* CALENDARIO */}
       {tab === 'calendario' && <>
         <div style={{ display: 'flex', gap: 5, marginBottom: 16, overflowX: 'auto', paddingBottom: 4 }}>
           {giorni.map(d => {
@@ -123,8 +120,7 @@ export default function ViewMagazzino() {
                     position: 'absolute', top: 4, right: 4,
                     background: viewDate === d ? '#000' : C.accent,
                     color: viewDate === d ? C.accent : '#000',
-                    borderRadius: '50%', width: 16, height: 16,
-                    fontSize: 9, fontWeight: 900,
+                    borderRadius: '50%', width: 16, height: 16, fontSize: 9, fontWeight: 900,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}>{hasTrasporti}</div>
                 )}
@@ -154,7 +150,6 @@ export default function ViewMagazzino() {
         ))}
       </>}
 
-      {/* DA ASSEGNARE */}
       {tab === 'richieste' && <>
         {richiesti.length === 0 ? <Empty text="Nessuna richiesta in attesa 🎉" /> : richiesti.map(t => (
           <Card key={t.id}>
@@ -176,7 +171,6 @@ export default function ViewMagazzino() {
         ))}
       </>}
 
-      {/* REPORT */}
       {tab === 'report' && <>
         <h3 style={{ color: C.accent, fontSize: 14, marginBottom: 14 }}>ORE PER CANTIERE</h3>
         {cantieri.map(c => {
@@ -188,25 +182,13 @@ export default function ViewMagazzino() {
             <Card key={c.id}>
               <div style={{ fontWeight: 700, marginBottom: 10 }}>{c.nome}</div>
               <div style={{ display: 'flex', gap: 20 }}>
-                <div>
-                  <div style={{ color: C.textMuted, fontSize: 11 }}>Previste</div>
-                  <div style={{ fontSize: 20, fontWeight: 800, color: C.blue }}>{prev}h</div>
-                </div>
-                <div>
-                  <div style={{ color: C.textMuted, fontSize: 11 }}>Effettive</div>
-                  <div style={{ fontSize: 20, fontWeight: 800, color: eff > prev ? C.red : C.green }}>{eff}h</div>
-                </div>
-                <div>
-                  <div style={{ color: C.textMuted, fontSize: 11 }}>Scarto</div>
-                  <div style={{ fontSize: 20, fontWeight: 800, color: (eff-prev) > 0 ? C.red : C.green }}>
-                    {eff-prev > 0 ? '+' : ''}{(eff-prev).toFixed(1)}h
-                  </div>
-                </div>
+                <div><div style={{ color: C.textMuted, fontSize: 11 }}>Previste</div><div style={{ fontSize: 20, fontWeight: 800, color: C.blue }}>{prev}h</div></div>
+                <div><div style={{ color: C.textMuted, fontSize: 11 }}>Effettive</div><div style={{ fontSize: 20, fontWeight: 800, color: eff > prev ? C.red : C.green }}>{eff}h</div></div>
+                <div><div style={{ color: C.textMuted, fontSize: 11 }}>Scarto</div><div style={{ fontSize: 20, fontWeight: 800, color: (eff-prev) > 0 ? C.red : C.green }}>{eff-prev > 0 ? '+' : ''}{(eff-prev).toFixed(1)}h</div></div>
               </div>
             </Card>
           )
         })}
-
         <h3 style={{ color: C.accent, fontSize: 14, marginBottom: 14, marginTop: 24 }}>ORE PER AUTISTA</h3>
         {autisti.map(a => {
           const at = completati.filter(t => t.autista_id === a.id)
@@ -225,7 +207,6 @@ export default function ViewMagazzino() {
         })}
       </>}
 
-      {/* DETAIL MODAL */}
       {selectedT && (
         <Modal title="Dettaglio Trasporto" onClose={() => setSelectedT(null)}>
           <Row label="Cantiere" value={getNome(selectedT.cantiere_id, cantieri)} />
@@ -241,9 +222,6 @@ export default function ViewMagazzino() {
           <Row label="Autista" value={selectedT.autista_id ? getNome(selectedT.autista_id, autisti) : 'Non assegnato'} />
           {selectedT.note_carpentiere && <Row label="Note cantiere" value={selectedT.note_carpentiere} />}
           {selectedT.note_autista && <Row label="Note autista" value={selectedT.note_autista} />}
-          {selectedT.ora_partenza_reale && <Row label="Partenza reale" value={selectedT.ora_partenza_reale?.slice(0,5)} />}
-          {selectedT.ora_arrivo_reale && <Row label="Arrivo cantiere" value={selectedT.ora_arrivo_reale?.slice(0,5)} />}
-          {selectedT.ora_rientro_reale && <Row label="Rientro" value={selectedT.ora_rientro_reale?.slice(0,5)} />}
           <div style={{ marginTop: 12, marginBottom: 16 }}><Badge stato={selectedT.stato} /></div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <Btn small color={C.blue} onClick={() => {
@@ -258,7 +236,6 @@ export default function ViewMagazzino() {
         </Modal>
       )}
 
-      {/* ASSIGN MODAL */}
       {assigning && (
         <Modal title="Pianifica Trasporto" onClose={() => setAssigning(null)}>
           <div style={{ marginBottom: 16, padding: 12, background: C.surfaceHigh, borderRadius: 8 }}>

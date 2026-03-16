@@ -1,5 +1,3 @@
-// ─── SHARED UI COMPONENTS ───────────────────────────────────────────────────
-
 export const C = {
   bg: '#0f1117', surface: '#1a1d26', surfaceHigh: '#22263a',
   accent: '#f5a623', blue: '#4a9eff', green: '#2ecc71',
@@ -7,12 +5,12 @@ export const C = {
 }
 
 export const STATUS_MAP = {
-  RICHIESTO:  { label: 'Richiesto',  color: '#7a7f9a', bg: '#1e2133' },
-  PIANIFICATO:{ label: 'Pianificato',color: '#4a9eff', bg: '#0d1f3a' },
-  CONFERMATO: { label: 'Confermato', color: '#f5a623', bg: '#2a1e00' },
-  IN_CORSO:   { label: 'In Corso',   color: '#e67e22', bg: '#2a1500' },
-  COMPLETATO: { label: 'Completato', color: '#2ecc71', bg: '#0a2a1a' },
-  ANNULLATO:  { label: 'Annullato',  color: '#e74c3c', bg: '#2a0a0a' },
+  RICHIESTO:   { label: 'Richiesto',   color: '#7a7f9a', bg: '#1e2133' },
+  PIANIFICATO: { label: 'Pianificato', color: '#4a9eff', bg: '#0d1f3a' },
+  CONFERMATO:  { label: 'Confermato',  color: '#f5a623', bg: '#2a1e00' },
+  IN_CORSO:    { label: 'In Corso',    color: '#e67e22', bg: '#2a1500' },
+  COMPLETATO:  { label: 'Completato',  color: '#2ecc71', bg: '#0a2a1a' },
+  ANNULLATO:   { label: 'Annullato',   color: '#e74c3c', bg: '#2a0a0a' },
 }
 
 export function Badge({ stato }) {

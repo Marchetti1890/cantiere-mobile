@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { supabase } from '../../lib/supabase'
-import { C, Badge, Card, Btn, Input, Modal, Row, Spinner, Empty } from '../../components/ui'
+import { supabase } from '../lib/supabase'
+import { C, Badge, Card, Btn, Input, Modal, Row, Spinner, Empty } from './ui'
 
 export default function ViewCarpentiere({ utente }) {
   const [trasporti, setTrasporti] = useState([])
@@ -82,7 +82,6 @@ export default function ViewCarpentiere({ utente }) {
         </Card>
       ))}
 
-      {/* FORM NUOVA RICHIESTA */}
       {showForm && (
         <Modal title="Nuova Richiesta Trasporto" onClose={() => setShowForm(false)}>
           <Input label="Cantiere" value={form.cantiere_id} onChange={v => setForm(f=>({...f,cantiere_id:v}))} required
@@ -99,7 +98,6 @@ export default function ViewCarpentiere({ utente }) {
         </Modal>
       )}
 
-      {/* DETAIL MODAL */}
       {selectedT && (
         <Modal title="Dettaglio Richiesta" onClose={() => setSelectedT(null)}>
           <Row label="Cantiere" value={getNome(selectedT.cantiere_id, cantieri)} />

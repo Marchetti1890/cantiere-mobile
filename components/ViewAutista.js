@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { supabase } from '../../lib/supabase'
-import { C, Badge, Card, Btn, Input, Modal, Row, Spinner, Empty } from '../../components/ui'
+import { supabase } from '../lib/supabase'
+import { C, Badge, Card, Btn, Input, Modal, Row, Spinner, Empty } from './ui'
 
 export default function ViewAutista({ utente }) {
   const [trasporti, setTrasporti] = useState([])
@@ -68,7 +68,6 @@ export default function ViewAutista({ utente }) {
 
   return (
     <div>
-      {/* Header oggi */}
       <div style={{
         marginBottom: 20, padding: 14,
         background: `${C.accent}15`, border: `1px solid ${C.accent}44`, borderRadius: 12,
@@ -82,7 +81,6 @@ export default function ViewAutista({ utente }) {
       {trasporti.length === 0 ? <Empty text="Nessun trasporto assegnato oggi" /> : trasporti.map(t => {
         const cantiere = cantieri.find(c => c.id === t.cantiere_id)
         const ns = nextStato(t.stato)
-        const isCompletato = t.stato === 'COMPLETATO'
         return (
           <Card key={t.id} style={{ borderColor: t.stato === 'IN_CORSO' ? C.accent : undefined }}>
             {t.stato === 'IN_CORSO' && (
@@ -100,7 +98,7 @@ export default function ViewAutista({ utente }) {
               <span>📦 {t.materiale}</span>
               <span>⌛ {t.ore_previste}h</span>
             </div>
-            {isCompletato && t.ore_effettive && (
+            {t.stato === 'COMPLETATO' && t.ore_effettive && (
               <div style={{ fontSize: 12, color: C.green, marginBottom: 10 }}>
                 ✅ Completato · {t.ore_effettive}h effettive
                 {t.note_autista && ` · "${t.note_autista}"`}
@@ -126,14 +124,12 @@ export default function ViewAutista({ utente }) {
         )
       })}
 
-      {/* AGGIORNA STATO MODAL */}
       {selectedT && (
         <Modal title="Aggiorna Stato" onClose={() => setSelectedT(null)}>
           <div style={{ marginBottom: 16, padding: 12, background: C.surfaceHigh, borderRadius: 8 }}>
             <div style={{ fontWeight: 700 }}>{cantieri.find(c=>c.id===selectedT.cantiere_id)?.nome}</div>
             <div style={{ color: C.textMuted, fontSize: 13, marginTop: 2 }}>{selectedT.materiale}</div>
           </div>
-
           <div style={{ marginBottom: 14 }}>
             <label style={{ fontSize: 12, color: C.textMuted, fontWeight: 600 }}>NOTE AUTISTA (opzionale)</label>
             <textarea value={noteInput} onChange={e => setNoteInput(e.target.value)}
@@ -144,17 +140,10 @@ export default function ViewAutista({ utente }) {
                 marginTop: 6, resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box',
               }} />
           </div>
-
           {nextStato(selectedT.stato) === 'COMPLETATO' && (
-            <Input
-              label="Ore effettive"
-              value={oreInput}
-              onChange={setOreInput}
-              type="number"
-              placeholder={`Previste: ${selectedT.ore_previste}`}
-            />
+            <Input label="Ore effettive" value={oreInput} onChange={setOreInput} type="number"
+              placeholder={`Previste: ${selectedT.ore_previste}`} />
           )}
-
           <Btn onClick={aggiornaStato} disabled={saving} style={{ width: '100%' }}>
             {saving ? 'Salvataggio...' : nextLabel(selectedT.stato)}
           </Btn>
