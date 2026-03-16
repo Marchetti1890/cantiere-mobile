@@ -65,9 +65,7 @@ export default function ViewMagazzino({ utente }) {
     if (conflict && !window.confirm('⚠️ Mezzo o autista già impegnato in questa data. Continuare?')) return
     setSaving(true)
     const updates = {
-      mezzo_id: form.mezzo_id,
-      autista_id: form.autista_id,
-      stato: 'CONFERMATO',
+      mezzo_id: form.mezzo_id, autista_id: form.autista_id, stato: 'CONFERMATO',
       ...(form.ora_inizio && { ora_inizio_prevista: form.ora_inizio }),
       ...(form.ore_previste && { ore_previste: Number(form.ore_previste) }),
     }
@@ -89,12 +87,11 @@ export default function ViewMagazzino({ utente }) {
   return (
     <div>
       <div style={{ display: 'flex', gap: 6, marginBottom: 18, overflowX: 'auto' }}>
-        {[['calendario', '📅 Calendario'], [`richieste`, `📋 Da assegnare (${richiesti.length})`], ['report', '📊 Report']].map(([k, l]) => (
+        {[['calendario','📅 Calendario'],[`richieste`,`📋 Da assegnare (${richiesti.length})`],['report','📊 Report']].map(([k,l]) => (
           <button key={k} onClick={() => setTab(k)} style={{
-            background: tab === k ? C.accent : C.surfaceHigh,
-            color: tab === k ? '#000' : C.text, border: 'none', borderRadius: 8,
-            padding: '8px 14px', fontWeight: 700, cursor: 'pointer', fontSize: 12,
-            whiteSpace: 'nowrap', fontFamily: 'inherit',
+            background: tab===k ? C.accent : C.surfaceHigh, color: tab===k ? '#000' : C.text,
+            border: 'none', borderRadius: 8, padding: '8px 14px', fontWeight: 700,
+            cursor: 'pointer', fontSize: 12, whiteSpace: 'nowrap', fontFamily: 'inherit',
           }}>{l}</button>
         ))}
       </div>
@@ -108,18 +105,18 @@ export default function ViewMagazzino({ utente }) {
             const hasTrasporti = trasporti.filter(t => t.data === d).length
             return (
               <button key={d} onClick={() => setViewDate(d)} style={{
-                minWidth: 52, background: viewDate === d ? C.accent : C.surfaceHigh,
-                color: viewDate === d ? '#000' : C.text, border: 'none', borderRadius: 10,
-                padding: '8px 6px', cursor: 'pointer', fontWeight: 700, textAlign: 'center',
-                fontFamily: 'inherit', position: 'relative',
+                minWidth: 52, background: viewDate===d ? C.accent : C.surfaceHigh,
+                color: viewDate===d ? '#000' : C.text, border: 'none', borderRadius: 10,
+                padding: '8px 6px', cursor: 'pointer', fontWeight: 700,
+                textAlign: 'center', fontFamily: 'inherit', position: 'relative',
               }}>
                 <div style={{ fontSize: 10 }}>{dayName}</div>
                 <div style={{ fontSize: 18 }}>{dayNum}</div>
                 {hasTrasporti > 0 && (
                   <div style={{
                     position: 'absolute', top: 4, right: 4,
-                    background: viewDate === d ? '#000' : C.accent,
-                    color: viewDate === d ? C.accent : '#000',
+                    background: viewDate===d ? '#000' : C.accent,
+                    color: viewDate===d ? C.accent : '#000',
                     borderRadius: '50%', width: 16, height: 16, fontSize: 9, fontWeight: 900,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}>{hasTrasporti}</div>
@@ -136,12 +133,9 @@ export default function ViewMagazzino({ utente }) {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 800, fontSize: 14, marginBottom: 3 }}>{getNome(t.cantiere_id, cantieri)}</div>
-                <div style={{ color: C.textMuted, fontSize: 12, marginBottom: 5 }}>
-                  {t.ora_inizio_prevista?.slice(0,5)} · {t.materiale}
-                </div>
+                <div style={{ color: C.textMuted, fontSize: 12, marginBottom: 5 }}>{t.ora_inizio_prevista?.slice(0,5)} · {t.materiale}</div>
                 <div style={{ fontSize: 12, color: C.textMuted }}>
-                  🚚 {t.mezzo_id ? getNome(t.mezzo_id, mezzi) : '—'} &nbsp;
-                  👤 {t.autista_id ? getNome(t.autista_id, autisti) : '—'}
+                  🚚 {t.mezzo_id ? getNome(t.mezzo_id, mezzi) : '—'} &nbsp; 👤 {t.autista_id ? getNome(t.autista_id, autisti) : '—'}
                 </div>
               </div>
               <Badge stato={t.stato} />
@@ -156,15 +150,13 @@ export default function ViewMagazzino({ utente }) {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8, marginBottom: 10 }}>
               <div>
                 <div style={{ fontWeight: 800, fontSize: 14 }}>{getNome(t.cantiere_id, cantieri)}</div>
-                <div style={{ color: C.textMuted, fontSize: 12, marginTop: 2 }}>
-                  {t.data} · {t.ora_inizio_prevista?.slice(0,5)} · {t.ore_previste}h
-                </div>
+                <div style={{ color: C.textMuted, fontSize: 12, marginTop: 2 }}>{t.data} · {t.ora_inizio_prevista?.slice(0,5)} · {t.ore_previste}h</div>
                 <div style={{ fontSize: 13, marginTop: 4 }}>{t.materiale}</div>
                 {t.note_carpentiere && <div style={{ fontSize: 11, color: C.textMuted, marginTop: 3 }}>📝 {t.note_carpentiere}</div>}
               </div>
               <Badge stato={t.stato} />
             </div>
-            <Btn small onClick={() => { setAssigning(t); setForm({ mezzo_id: '', autista_id: '', ora_inizio: t.ora_inizio_prevista?.slice(0,5) || '', ore_previste: t.ore_previste || '' }) }}>
+            <Btn small onClick={() => { setAssigning(t); setForm({ mezzo_id: '', autista_id: '', ora_inizio: t.ora_inizio_prevista?.slice(0,5)||'', ore_previste: t.ore_previste||'' }) }}>
               Assegna →
             </Btn>
           </Card>
@@ -176,15 +168,15 @@ export default function ViewMagazzino({ utente }) {
         {cantieri.map(c => {
           const ct = completati.filter(t => t.cantiere_id === c.id)
           if (!ct.length) return null
-          const prev = ct.reduce((s, t) => s + (t.ore_previste || 0), 0)
-          const eff = ct.reduce((s, t) => s + (t.ore_effettive || 0), 0)
+          const prev = ct.reduce((s,t) => s+(t.ore_previste||0), 0)
+          const eff = ct.reduce((s,t) => s+(t.ore_effettive||0), 0)
           return (
             <Card key={c.id}>
               <div style={{ fontWeight: 700, marginBottom: 10 }}>{c.nome}</div>
               <div style={{ display: 'flex', gap: 20 }}>
                 <div><div style={{ color: C.textMuted, fontSize: 11 }}>Previste</div><div style={{ fontSize: 20, fontWeight: 800, color: C.blue }}>{prev}h</div></div>
-                <div><div style={{ color: C.textMuted, fontSize: 11 }}>Effettive</div><div style={{ fontSize: 20, fontWeight: 800, color: eff > prev ? C.red : C.green }}>{eff}h</div></div>
-                <div><div style={{ color: C.textMuted, fontSize: 11 }}>Scarto</div><div style={{ fontSize: 20, fontWeight: 800, color: (eff-prev) > 0 ? C.red : C.green }}>{eff-prev > 0 ? '+' : ''}{(eff-prev).toFixed(1)}h</div></div>
+                <div><div style={{ color: C.textMuted, fontSize: 11 }}>Effettive</div><div style={{ fontSize: 20, fontWeight: 800, color: eff>prev?C.red:C.green }}>{eff}h</div></div>
+                <div><div style={{ color: C.textMuted, fontSize: 11 }}>Scarto</div><div style={{ fontSize: 20, fontWeight: 800, color: (eff-prev)>0?C.red:C.green }}>{eff-prev>0?'+':''}{(eff-prev).toFixed(1)}h</div></div>
               </div>
             </Card>
           )
@@ -192,7 +184,7 @@ export default function ViewMagazzino({ utente }) {
         <h3 style={{ color: C.accent, fontSize: 14, marginBottom: 14, marginTop: 24 }}>ORE PER AUTISTA</h3>
         {autisti.map(a => {
           const at = completati.filter(t => t.autista_id === a.id)
-          const eff = at.reduce((s, t) => s + (t.ore_effettive || 0), 0)
+          const eff = at.reduce((s,t) => s+(t.ore_effettive||0), 0)
           return (
             <Card key={a.id}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
